@@ -1,0 +1,37 @@
+local teleportedCurses = {}
+local curseNames = {"Roppongi Curse", "Mantis Curse", "Jujutsu Sorcerer", "Flyhead"}
+
+while true do
+    task.wait(0.10)
+
+    local Living = workspace:FindFirstChild("Living")
+    if Living then
+        for _, Curse in ipairs(Living:GetChildren()) do
+            if Curse:IsA("Model") and not teleportedCurses[Curse] then
+                local curseName = Curse.Name
+                for _, targetName in ipairs(curseNames) do
+                    if curseName == targetName then
+                        local player = game.Players.LocalPlayer
+                        local character = player.Character
+
+                        if character and character:FindFirstChild("HumanoidRootPart") then
+                            local rootPart = character:FindFirstChild("HumanoidRootPart")
+                            local curseRootPart = Curse:FindFirstChild("HumanoidRootPart")
+
+                            if curseRootPart then
+                                rootPart.CFrame = curseRootPart.CFrame
+                                teleportedCurses[Curse] = true
+                            else
+                                warn("HumanoidRootPart not found in", curseName)
+                                teleportedCurses[Curse] = true
+                            end
+                        end
+                        break
+                    end
+                end
+            end
+        end
+    else
+        task.wait(1)
+    end
+end
